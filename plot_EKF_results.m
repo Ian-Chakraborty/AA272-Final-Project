@@ -12,6 +12,68 @@ geoid_height_N = geoidheight(lat0,lon0+360);
 alt0 = ref_alt - geoid_height_N;
 lla0 = [lat0,lon0,alt0];
 
+%% Handheld Case 1
+
+
+[lat_t, lon_t, ~] = XYZtoLLa([mu_1(1,:)',mu_1(2,:)',p_XYZ_1(:,3)],heading_angles(2),lla0);
+
+
+n_points = 100;
+sigma_plot = sqrt(sigma_1{1}(1));
+
+X = mu_1(1,1);
+Y = mu_1(2,1);
+Z = p_XYZ_1(3,1);
+center = [X,Y,Z];
+[center_lat, center_lon, ~] = XYZtoLLa(center,heading_angles(2),lla0);
+
+
+xvals = linspace(-sigma_plot,sigma_plot,n_points);
+ytop = sqrt(sigma_plot^2-xvals.^2);
+ybot = -sqrt(sigma_plot^2-xvals.^2);
+error_ellipse = [xvals' + X,ytop' + Y, Z*ones(n_points,1); flip([xvals' + X, ybot' + Y, Z*ones(n_points,1)])];
+% error_ellipses{i} = ned2lla(error_ellipses{i},lla0,'flat');
+[ee_lat, ee_lon, ee_ref_alt] = XYZtoLLa(error_ellipse,heading_angles(2),lla0);
+
+Xf = mu_1(1,end);
+Yf = mu_1(2,end);
+Zf = p_XYZ_1(3,end);
+sigma_plot = double(sqrt(sigma_1{end}(1)));
+xvals = linspace(-sigma_plot,sigma_plot,n_points);
+ytop = sqrt(sigma_plot^2-xvals.^2);
+ybot = -sqrt(sigma_plot^2-xvals.^2);
+error_ellipse = [xvals' + Xf,ytop' + Yf, Z*ones(n_points,1); flip([xvals' + Xf, ybot' + Yf, Zf*ones(n_points,1)])];
+% error_ellipses{i} = ned2lla(error_ellipses{i},lla0,'flat');
+[ee_lat_f, ee_lon_f, ~] = XYZtoLLa(error_ellipse,heading_angles(2),lla0);
+
+
+
+
+figure()
+plot(mu_1(2,:),mu_1(1,:),'b-*','linewidth',1.5)
+hold on
+plot(mu_1(4,:),mu_1(3,:),'r-*','linewidth',1.5)
+plot(p_XYZ_1(:,2),p_XYZ_1(:,1),'g-*','linewidth',1.5)
+plot(0,0,'k+','markersize',15,'linewidth',3)
+grid on
+
+xlabel('Y (m)','fontweight','bold','FontSize',12)
+ylabel('X (m)','fontweight','bold','FontSize',12)
+legend('Target Estimate','Drone Estimate','Drone Path','True Target','fontsize',12,'fontweight','bold','location','nw')
+title('Hand Test 1 Local Space','fontsize',14,'FontWeight','bold')
+
+
+figure()
+geoplot(lat0,lon0,'y+','MarkerSize',20,'linewidth',2)
+hold on
+geoplot(lat_t,lon_t,'b-*','linewidth',2)
+geoplot(lat_1,lon_1,'g-*','linewidth',1)
+geoplot(ee_lat,ee_lon,'c-','linewidth',2)
+geoplot(ee_lat_f,ee_lon_f,'m-','linewidth',2)
+geobasemap satellite
+legend('True Target Location','Target Estimate','Drone Path','Initial Variance','Final Variance','fontsize',12,'fontweight','bold')
+title('Hand Test 1 Geoplot','fontsize',14,'FontWeight','bold')
+
 %% Handheld Case 2
 
 
@@ -91,6 +153,68 @@ geobasemap satellite
 legend('True Target Location','Target Estimate','Drone Path','Initial Variance','Final Variance','fontsize',12,'fontweight','bold')
 title('Hand Test 2 Geoplot','fontsize',14,'FontWeight','bold')
 
+
+%% Handheld Case 3
+
+
+[lat_t, lon_t, ~] = XYZtoLLa([mu_3(1,:)',mu_3(2,:)',p_XYZ_3(:,3)],heading_angles(2),lla0);
+
+
+n_points = 100;
+sigma_plot = sqrt(sigma_3{1}(1));
+
+X = mu_3(1,1);
+Y = mu_3(2,1);
+Z = p_XYZ_3(3,1);
+center = [X,Y,Z];
+[center_lat, center_lon, ~] = XYZtoLLa(center,heading_angles(2),lla0);
+
+
+xvals = linspace(-sigma_plot,sigma_plot,n_points);
+ytop = sqrt(sigma_plot^2-xvals.^2);
+ybot = -sqrt(sigma_plot^2-xvals.^2);
+error_ellipse = [xvals' + X,ytop' + Y, Z*ones(n_points,1); flip([xvals' + X, ybot' + Y, Z*ones(n_points,1)])];
+% error_ellipses{i} = ned2lla(error_ellipses{i},lla0,'flat');
+[ee_lat, ee_lon, ee_ref_alt] = XYZtoLLa(error_ellipse,heading_angles(2),lla0);
+
+Xf = mu_3(1,end);
+Yf = mu_3(2,end);
+Zf = p_XYZ_3(3,end);
+sigma_plot = double(sqrt(sigma_3{end}(1)));
+xvals = linspace(-sigma_plot,sigma_plot,n_points);
+ytop = sqrt(sigma_plot^2-xvals.^2);
+ybot = -sqrt(sigma_plot^2-xvals.^2);
+error_ellipse = [xvals' + Xf,ytop' + Yf, Z*ones(n_points,1); flip([xvals' + Xf, ybot' + Yf, Zf*ones(n_points,1)])];
+% error_ellipses{i} = ned2lla(error_ellipses{i},lla0,'flat');
+[ee_lat_f, ee_lon_f, ~] = XYZtoLLa(error_ellipse,heading_angles(2),lla0);
+
+
+
+
+figure()
+plot(mu_3(2,:),mu_3(1,:),'b-*','linewidth',1.5)
+hold on
+plot(mu_3(4,:),mu_3(3,:),'r-*','linewidth',1.5)
+plot(p_XYZ_3(:,2),p_XYZ_3(:,1),'g-*','linewidth',1.5)
+plot(0,0,'k+','markersize',15,'linewidth',3)
+grid on
+xlabel('Y (m)','fontweight','bold','FontSize',12)
+ylabel('X (m)','fontweight','bold','FontSize',12)
+legend('Target Estimate','Drone Estimate','Drone Path','True Target','fontsize',12,'fontweight','bold','location','sw')
+title('Hand Test 3 Local Space','fontsize',14,'FontWeight','bold')
+
+
+
+figure()
+geoplot(lat0,lon0,'y+','MarkerSize',20,'linewidth',2)
+hold on
+geoplot(lat_t,lon_t,'b-*','linewidth',2)
+geoplot(lat_3,lon_3,'g-*','linewidth',1)
+geoplot(ee_lat,ee_lon,'c-','linewidth',2)
+geoplot(ee_lat_f,ee_lon_f,'m-','linewidth',2)
+geobasemap satellite
+legend('True Target Location','Target Estimate','Drone Path','Initial Variance','Final Variance','fontsize',12,'fontweight','bold')
+title('Hand Test 3 Geoplot','fontsize',14,'FontWeight','bold')
 
 
 %% Flight case
